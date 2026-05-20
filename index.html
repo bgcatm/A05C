@@ -38,6 +38,22 @@
             vertical-align: middle !important;
         }
 
+        /* Hover and focus feedback styles for inline editable cells to mimic Excel experience */
+        .excel-table td[contenteditable="true"] {
+            transition: all 0.15s ease-in-out;
+            outline: none;
+        }
+        .excel-table td[contenteditable="true"]:hover {
+            background-color: #fefce8; /* light warm yellow */
+            outline: 1px dashed #eab308; /* yellow-500 dashed */
+            cursor: text;
+        }
+        .excel-table td[contenteditable="true"]:focus {
+            background-color: #fef9c3; /* warmer focus yellow */
+            outline: 2px solid #eab308 !important; /* solid yellow focus ring */
+            box-shadow: 0 0 4px rgba(234, 179, 8, 0.4);
+        }
+
         /* Printable optimization styles - Strict Landscape A4 */
         @media print {
             body {
@@ -166,10 +182,10 @@
                             <input type="text" id="form-itemName" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-white" placeholder="例如：辦公椅">
                         </div>
                         <div>
-                            <label class="block text-[10px] text-slate-400">電腦設備 (Y/N)</label>
+                            <label class="block text-[10px] text-slate-400">電腦設備 (是/ /)</label>
                             <select id="form-isComp" class="w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-white">
-                                <option value="N">N</option>
-                                <option value="Y">Y</option>
+                                <option value="/">/</option>
+                                <option value="是">是</option>
                             </select>
                         </div>
                     </div>
@@ -315,18 +331,23 @@
                 </div>
 
                 <!-- Notices/Instructions Form Box -->
-                <div class="border border-black bg-neutral-50 p-3.5 mb-6 text-xs text-gray-700 leading-relaxed rounded-sm">
+                <div class="border border-black bg-neutral-50 p-3.5 mb-2 text-xs text-gray-700 leading-relaxed rounded-sm">
                     <div class="font-bold text-gray-950 mb-1">注意事項：</div>
                     <ul class="space-y-1 list-none pl-1">
-                        <li>(1) 此表格正本由單位主任／負責人存放單位，留待核數師查對；副本交會計部處理。</li>
-                        <li>(2) 本表格目的乃紀錄單位內所有取消的物品，單位凡取消任何物品，必須於此表格記錄。</li>
-                        <li>(3) 單位凡取消任何物品，必須先獲總監簽署作實。</li>
-                        <li>(4) 總監批准取消日期，必須不遲過取消日期。</li>
-                        <li>(5) 物品編號是用以辨別每件物品的檢索鍵所以必須是唯一的；此編號必須貼在物品之上。</li>
-                        <li>(6) 任何物品，若有牌子、型號和機身編號（Serial Number），必須記錄。</li>
-                        <li>(7) 可數的物品必須填上數量，不可數／難數的物品，則只需以「P」表示。</li>
-                        <li>(8) 服務單位人員已經就固定資產及非耗用物品登記冊上的資產進行例行實地查察工作，監督確認記錄完整無誤。</li>
+                        <li>(1) 此表格正本由單位主任／負責人存放單位，留待核數師查對。</li>
+                        <li>(2) 本表格目的乃紀錄單位內所有已取消、報銷或註銷的物品，單位凡取消任何物品，必須於本表格記錄。</li>
+                        <li>(3) 物品編號是用以辨別每件物品的檢索鍵所以必須是唯一的；此編號必須貼在物品之上。</li>
+                        <li>(4) 任何物品，若有牌子、型號 and 機身編號（Serial Number），必須記錄。</li>
+                        <li>(5) 經費來源例子：LSG、BG、Sir David Trench Fund、JC、SIF、FIF、捐贈、其他（請註明）。</li>
+                        <li>(6) 可數的物品必須填上數量，不可數／難數的物品，則只需以「P」表示。</li>
+                        <li>(7) 服務單位人員已經就固定資產及非耗用物品登記冊上的資產進行例行實地查察工作，監督確認取消記錄完整無誤。</li>
                     </ul>
+                </div>
+
+                <!-- Interactive Inline Edit Indicator -->
+                <div class="no-print mb-4 flex items-center space-x-2 text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg p-2.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span><strong>💡 即時修改提示：</strong> 表格已支援 inline 編輯。您可以<strong>直接點擊</strong>下方預覽表格中的任何文字、編號、金額或日期進行即時修改，點擊空白處後系統會自動校驗並完美儲存！</span>
                 </div>
 
                 <!-- Main Items Table -->
@@ -367,8 +388,8 @@
                     <table class="w-full excel-table border-collapse border border-black">
                         <thead>
                             <tr class="bg-[#ffff00] text-slate-900 font-bold">
-                                <th class="w-1/2 py-2 text-xs border border-black">單位主任/負責人名稱</th>
-                                <th class="w-1/2 py-2 text-xs border border-black">總監名稱</th>
+                                <th class="w-1/2 py-2 text-xs border border-black">單位主任 / 負責人核實</th>
+                                <th class="w-1/2 py-2 text-xs border border-black">總監批核</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -383,7 +404,7 @@
                                 <td class="p-4 border border-black text-left align-top space-y-4">
                                     <div class="text-xs">姓名：<span id="p-sign-director" class="font-bold">陳國邦</span></div>
                                     <div class="h-10 flex items-end text-gray-400 italic text-[10px]">（簽署蓋印處）</div>
-                                    <div class="text-xs">批核取消日期：<br><span id="p-sign-director-date" class="font-bold whitespace-nowrap">—</span></div>
+                                    <div class="text-xs">批核及取消日期：<br><span id="p-sign-director-date" class="font-bold whitespace-nowrap">—</span></div>
                                 </td>
                             </tr>
                         </tbody>
@@ -447,6 +468,8 @@
         // Sleek Inline Notification System
         function showNotification(message, isSuccess = false) {
             const errorDiv = document.getElementById('form-error-msg');
+            if (!errorDiv) return;
+            
             if (!message) {
                 errorDiv.classList.add('hidden');
                 return;
@@ -460,20 +483,20 @@
                 // Automatically hide success messages after 3 seconds
                 setTimeout(() => {
                     errorDiv.classList.add('hidden');
-                }, 3000);
+                }, 3500);
             } else {
                 errorDiv.className = "text-xs font-semibold py-2 px-3 rounded-lg border text-center transition-all duration-300 bg-red-950/40 border-red-900/50 text-red-400";
             }
         }
 
-        // Format Date to two lines (Year on first line, Month and Day on second line, using '-' divider)
-        function formatDateWithNewLine(dateStr) {
+        // Standardize date to YYYY-MM-DD
+        function normalizeDateToYYYYMMDD(dateStr) {
             if (!dateStr || dateStr === "—") return "—";
             
             // Handle standard YYYY-MM-DD
             const matchDash = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
             if (matchDash) {
-                return `${matchDash[1]}<br>${matchDash[2]}-${matchDash[3]}`;
+                return dateStr;
             }
 
             // Handle YYYY年MM月DD日 (Fallback replacement)
@@ -481,7 +504,7 @@
             if (matchChinese) {
                 const mm = String(matchChinese[2]).padStart(2, '0');
                 const dd = String(matchChinese[3]).padStart(2, '0');
-                return `${matchChinese[1]}<br>${mm}-${dd}`;
+                return `${matchChinese[1]}-${mm}-${dd}`;
             }
 
             return dateStr;
@@ -489,12 +512,19 @@
 
         // Sync inputs with Excel View
         function syncData() {
-            const deptName = document.getElementById('input-deptName').value || "—";
-            const deptCode = document.getElementById('input-deptCode').value || "—";
-            const staffName = document.getElementById('input-staffName').value || "—";
-            const headName = document.getElementById('input-headName').value || "—";
-            const directorName = document.getElementById('input-directorName').value || "—";
-            const rawDate = document.getElementById('input-recordDate').value;
+            const deptNameInput = document.getElementById('input-deptName');
+            const deptCodeInput = document.getElementById('input-deptCode');
+            const staffNameInput = document.getElementById('input-staffName');
+            const headNameInput = document.getElementById('input-headName');
+            const directorNameInput = document.getElementById('input-directorName');
+            const recordDateInput = document.getElementById('input-recordDate');
+
+            const deptName = deptNameInput ? (deptNameInput.value || "—") : "—";
+            const deptCode = deptCodeInput ? (deptCodeInput.value || "—") : "—";
+            const staffName = staffNameInput ? (staffNameInput.value || "—") : "—";
+            const headName = headNameInput ? (headNameInput.value || "—") : "—";
+            const directorName = directorNameInput ? (directorNameInput.value || "—") : "—";
+            const rawDate = recordDateInput ? recordDateInput.value : "";
             
             // Format date to YYYY-MM-DD for consistency
             let formattedDate = "—";
@@ -507,24 +537,101 @@
             }
 
             // Sync Header Details
-            document.getElementById('p-deptName').innerText = deptName;
-            document.getElementById('p-deptCode').innerText = deptCode;
-            document.getElementById('p-staffName').innerText = staffName;
-            document.getElementById('p-recordDate').innerText = formattedDate;
+            const pDeptName = document.getElementById('p-deptName');
+            const pDeptCode = document.getElementById('p-deptCode');
+            const pStaffName = document.getElementById('p-staffName');
+            const pRecordDate = document.getElementById('p-recordDate');
+            
+            if (pDeptName) pDeptName.innerText = deptName;
+            if (pDeptCode) pDeptCode.innerText = deptCode;
+            if (pStaffName) pStaffName.innerText = staffName;
+            if (pRecordDate) pRecordDate.innerText = formattedDate;
 
             // Sync New Signature Table Details (Direct single line date values on next line)
-            document.getElementById('p-sign-head').innerText = headName;
-            document.getElementById('p-sign-director').innerText = directorName;
+            const pSignHead = document.getElementById('p-sign-head');
+            const pSignDirector = document.getElementById('p-sign-director');
+            const pSignHeadDate = document.getElementById('p-sign-head-date');
+            const pSignDirectorDate = document.getElementById('p-sign-director-date');
 
-            document.getElementById('p-sign-head-date').innerText = formattedDate;
-            document.getElementById('p-sign-director-date').innerText = formattedDate;
+            if (pSignHead) pSignHead.innerText = headName;
+            if (pSignDirector) pSignDirector.innerText = directorName;
+            if (pSignHeadDate) pSignHeadDate.innerText = formattedDate;
+            if (pSignDirectorDate) pSignDirectorDate.innerText = formattedDate;
 
             renderTable();
+        }
+
+        // Action: Handler for updating a specific field within itemRecords inline
+        function updateRecordField(index, field, value) {
+            // Protect out of bounds
+            if (!itemRecords[index]) return;
+
+            let cleanValue = value.replace(/[\r\n\t]+/g, ' ').trim(); // Prevent multiline breaks in array
+            
+            if (field === 'price') {
+                // Strip currency symbol and non-numeric chars
+                let numericValue = cleanValue.replace(/[^0-9.]/g, '');
+                let parsedPrice = parseFloat(numericValue);
+                itemRecords[index][field] = isNaN(parsedPrice) ? 0 : parsedPrice;
+                showNotification("✏️ 購入單價已即時修改並儲存", true);
+            } else if (field === 'itemNo') {
+                if (cleanValue === '') {
+                    showNotification("❌ 物品編號不能為空！", false);
+                    renderTable();
+                    return;
+                }
+                // Check uniqueness across other rows
+                const isDuplicate = itemRecords.some((rec, idx) => idx !== index && rec.itemNo === cleanValue);
+                if (isDuplicate) {
+                    showNotification("⚠️ 物品編號與現有記錄重複，修改已撤銷！", false);
+                    renderTable();
+                    return;
+                }
+                itemRecords[index][field] = cleanValue;
+                showNotification("✏️ 物品編號已修改並確認唯一性", true);
+            } else if (field === 'isComp') {
+                // Standardize isComp values to 是 or /
+                if (cleanValue === '是' || cleanValue.toUpperCase() === 'Y') {
+                    itemRecords[index][field] = '是';
+                } else {
+                    itemRecords[index][field] = '/';
+                }
+                showNotification("✏️ 電腦設備狀態已修改", true);
+            } else if (field === 'cancelDate') {
+                itemRecords[index][field] = normalizeDateToYYYYMMDD(cleanValue);
+                showNotification("✏️ 取消日期已更新並標準化為 YYYY-MM-DD", true);
+            } else {
+                itemRecords[index][field] = cleanValue;
+                showNotification(`✏️ 已更新該物品的${getFieldChineseLabel(field)}`, true);
+            }
+
+            // Sync, which triggers table redrawing to format outputs properly
+            syncData();
+        }
+
+        // Helper to translate field key to Chinese warning/log message
+        function getFieldChineseLabel(field) {
+            const labels = {
+                name: "物品名稱",
+                isComp: "電腦設備狀態",
+                crmNo: "CRM編號",
+                location: "物品位置",
+                user: "使用者名稱",
+                brand: "牌子及型號",
+                sn: "機身編號",
+                fund: "經費來源",
+                applicant: "申請人名稱",
+                cancelReason: "取消原因",
+                cancelDate: "取消日期",
+                remark: "備註"
+            };
+            return labels[field] || field;
         }
 
         // Render data rows in Excel Table
         function renderTable() {
             const tbody = document.getElementById('items-tbody');
+            if (!tbody) return;
             tbody.innerHTML = '';
 
             if (itemRecords.length === 0) {
@@ -546,27 +653,68 @@
                 const rawPrice = parseFloat(item.price);
                 const validatedPrice = isNaN(rawPrice) ? 0 : rawPrice;
 
-                // Format cancel date to display on two lines (Year on first line, MM-DD on second line)
-                const displayCancelDate = formatDateWithNewLine(item.cancelDate || '');
+                // Format cancel date strictly to standard single-line YYYY-MM-DD
+                const displayCancelDate = normalizeDateToYYYYMMDD(item.cancelDate || '');
 
                 tr.innerHTML = `
-                    <td class="font-medium border border-black">${escapeHTML(item.name || '')}</td>
-                    <td class="border border-black">${escapeHTML(item.isComp || 'N')}</td>
-                    <td class="font-mono font-medium border border-black">${escapeHTML(item.itemNo || '')}</td>
-                    <td class="font-mono border border-black">${escapeHTML(item.crmNo || '')}</td>
-                    <td class="border border-black">${escapeHTML(item.location || '')}</td>
-                    <td class="border border-black">${escapeHTML(item.user || '')}</td>
-                    <td class="border border-black">${escapeHTML(item.brand || '')}</td>
-                    <td class="font-mono text-[9px] border border-black">${escapeHTML(item.sn || '')}</td>
-                    <td class="border border-black">${escapeHTML(item.fund || '')}</td>
-                    <td class="border border-black">$${validatedPrice.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 2})}</td>
+                    <!-- Inline Editable Columns (Sync back on blur) -->
+                    <td contenteditable="true" 
+                        onblur="updateRecordField(${index}, 'name', this.innerText)" 
+                        class="font-medium border border-black">${escapeHTML(item.name || '')}</td>
+                        
+                    <td contenteditable="true" 
+                        onblur="updateRecordField(${index}, 'isComp', this.innerText)" 
+                        class="border border-black">${escapeHTML(item.isComp || '/')}</td>
+                        
+                    <td contenteditable="true" 
+                        onblur="updateRecordField(${index}, 'itemNo', this.innerText)" 
+                        class="font-mono font-medium border border-black">${escapeHTML(item.itemNo || '')}</td>
+                        
+                    <td contenteditable="true" 
+                        onblur="updateRecordField(${index}, 'crmNo', this.innerText)" 
+                        class="font-mono border border-black">${escapeHTML(item.crmNo || '')}</td>
+                        
+                    <td contenteditable="true" 
+                        onblur="updateRecordField(${index}, 'location', this.innerText)" 
+                        class="border border-black">${escapeHTML(item.location || '')}</td>
+                        
+                    <td contenteditable="true" 
+                        onblur="updateRecordField(${index}, 'user', this.innerText)" 
+                        class="border border-black">${escapeHTML(item.user || '')}</td>
+                        
+                    <td contenteditable="true" 
+                        onblur="updateRecordField(${index}, 'brand', this.innerText)" 
+                        class="border border-black">${escapeHTML(item.brand || '')}</td>
+                        
+                    <td contenteditable="true" 
+                        onblur="updateRecordField(${index}, 'sn', this.innerText)" 
+                        class="font-mono text-[9px] border border-black">${escapeHTML(item.sn || '')}</td>
+                        
+                    <td contenteditable="true" 
+                        onblur="updateRecordField(${index}, 'fund', this.innerText)" 
+                        class="border border-black">${escapeHTML(item.fund || '')}</td>
+                        
+                    <td contenteditable="true" 
+                        onblur="updateRecordField(${index}, 'price', this.innerText)" 
+                        class="border border-black">$${validatedPrice.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 2})}</td>
                     
-                    <!-- Unified simplified columns for cancelled details -->
-                    <td class="border border-black">${escapeHTML(item.applicant || '')}</td>
-                    <td class="border border-black text-left px-1">${escapeHTML(item.cancelReason || '')}</td>
-                    <td class="text-xs border border-black">${displayCancelDate}</td>
+                    <td contenteditable="true" 
+                        onblur="updateRecordField(${index}, 'applicant', this.innerText)" 
+                        class="border border-black">${escapeHTML(item.applicant || '')}</td>
+                        
+                    <td contenteditable="true" 
+                        onblur="updateRecordField(${index}, 'cancelReason', this.innerText)" 
+                        class="border border-black text-left px-1">${escapeHTML(item.cancelReason || '')}</td>
+                        
+                    <td contenteditable="true" 
+                        onblur="updateRecordField(${index}, 'cancelDate', this.innerText)" 
+                        class="text-xs border border-black whitespace-nowrap">${displayCancelDate}</td>
                     
-                    <td class="text-[9px] border border-black">${escapeHTML(item.remark || '')}</td>
+                    <td contenteditable="true" 
+                        onblur="updateRecordField(${index}, 'remark', this.innerText)" 
+                        class="text-[9px] border border-black">${escapeHTML(item.remark || '')}</td>
+                        
+                    <!-- Action Column -->
                     <td class="no-print border border-black bg-slate-100 py-1">
                         <button onclick="removeItem(${index})" class="text-red-500 hover:text-red-700 p-1 rounded hover:bg-red-50 transition-all mx-auto block" title="刪除此行">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
@@ -589,22 +737,39 @@
             // Hide previous messages
             showNotification(null);
 
-            const name = document.getElementById('form-itemName').value.trim();
-            const isComp = document.getElementById('form-isComp').value;
-            const itemNo = document.getElementById('form-itemNo').value.trim();
-            const crmNo = document.getElementById('form-crmNo').value.trim();
-            const location = document.getElementById('form-location').value.trim();
-            const user = document.getElementById('form-user').value.trim();
-            const brand = document.getElementById('form-brand').value.trim();
-            const sn = document.getElementById('form-sn').value.trim();
-            const fund = document.getElementById('form-fund').value.trim();
-            const price = document.getElementById('form-price').value.trim() || "0";
+            const nameEl = document.getElementById('form-itemName');
+            const isCompEl = document.getElementById('form-isComp');
+            const itemNoEl = document.getElementById('form-itemNo');
+            const crmNoEl = document.getElementById('form-crmNo');
+            const locationEl = document.getElementById('form-location');
+            const userEl = document.getElementById('form-user');
+            const brandEl = document.getElementById('form-brand');
+            const snEl = document.getElementById('form-sn');
+            const fundEl = document.getElementById('form-fund');
+            const priceEl = document.getElementById('form-price');
+            const applicantEl = document.getElementById('form-applicant');
+            const cancelReasonEl = document.getElementById('form-cancelReason');
+            const cancelDateEl = document.getElementById('form-cancelDate');
+            const remarkEl = document.getElementById('form-remark');
+            const staffNameEl = document.getElementById('input-staffName');
+
+            const name = nameEl ? nameEl.value.trim() : "";
+            const isComp = isCompEl ? isCompEl.value : "/";
+            const itemNo = itemNoEl ? itemNoEl.value.trim() : "";
+            const crmNo = crmNoEl ? crmNoEl.value.trim() : "";
+            const location = locationEl ? locationEl.value.trim() : "";
+            const user = userEl ? userEl.value.trim() : "";
+            const brand = brandEl ? brandEl.value.trim() : "";
+            const sn = snEl ? snEl.value.trim() : "";
+            const fund = fundEl ? fundEl.value.trim() : "";
+            const price = priceEl ? (priceEl.value.trim() || "0") : "0";
             
             // A05C fields with fallback default values
-            const applicant = document.getElementById('form-applicant').value.trim() || document.getElementById('input-staffName').value.trim();
-            const cancelReason = document.getElementById('form-cancelReason').value.trim();
-            const cancelDate = document.getElementById('form-cancelDate').value;
-            const remark = document.getElementById('form-remark').value.trim();
+            const applicant = (applicantEl && applicantEl.value.trim()) ? applicantEl.value.trim() : (staffNameEl ? staffNameEl.value.trim() : "");
+            const cancelReason = cancelReasonEl ? cancelReasonEl.value.trim() : "";
+            const rawCancelDate = cancelDateEl ? cancelDateEl.value : "";
+            const cancelDate = normalizeDateToYYYYMMDD(rawCancelDate);
+            const remark = remarkEl ? remarkEl.value.trim() : "";
 
             if (!name) {
                 showNotification("❌ 請輸入物品名稱！", false);
@@ -631,16 +796,16 @@
             showNotification("✅ 已成功添加一項資產取消記錄！", true);
 
             // Reset manual form fields (but keep default names filled)
-            document.getElementById('form-itemName').value = '';
-            document.getElementById('form-itemNo').value = '';
-            document.getElementById('form-crmNo').value = '';
-            document.getElementById('form-location').value = '';
-            document.getElementById('form-user').value = '';
-            document.getElementById('form-brand').value = '';
-            document.getElementById('form-sn').value = '';
-            document.getElementById('form-fund').value = '';
-            document.getElementById('form-price').value = '';
-            document.getElementById('form-applicant').value = '';
+            if (nameEl) nameEl.value = '';
+            if (itemNoEl) itemNoEl.value = '';
+            if (crmNoEl) crmNoEl.value = '';
+            if (locationEl) locationEl.value = '';
+            if (userEl) userEl.value = '';
+            if (brandEl) brandEl.value = '';
+            if (snEl) snEl.value = '';
+            if (fundEl) fundEl.value = '';
+            if (priceEl) priceEl.value = '';
+            if (applicantEl) applicantEl.value = '';
             
             // Reset dates with current date
             const today = new Date();
@@ -649,9 +814,9 @@
             const day = String(today.getDate()).padStart(2, '0');
             const formattedDate = `${year}-${month}-${day}`;
             
-            document.getElementById('form-cancelDate').value = formattedDate;
-            document.getElementById('form-cancelReason').value = '';
-            document.getElementById('form-remark').value = '';
+            if (cancelDateEl) cancelDateEl.value = formattedDate;
+            if (cancelReasonEl) cancelReasonEl.value = '';
+            if (remarkEl) remarkEl.value = '';
         }
 
         // Delete Row
@@ -673,7 +838,8 @@
         // Excel Paste Feature (Parses standard Tab-separated values, updated for A05C columns)
         function importExcelData() {
             showNotification(null);
-            const text = document.getElementById('pasteArea').value.trim();
+            const pasteArea = document.getElementById('pasteArea');
+            const text = pasteArea ? pasteArea.value.trim() : "";
             if (!text) {
                 showNotification("❌ 請先貼上 Excel 資料內容！", false);
                 return;
@@ -696,7 +862,15 @@
                 }
 
                 const name = cols[0] ? cols[0].trim() : '';
-                const isComp = cols[1] ? cols[1].trim() : 'N';
+                
+                // Standarize imported values to 是 or /
+                let isCompVal = cols[1] ? cols[1].trim() : '/';
+                if (isCompVal.toUpperCase() === 'Y' || isCompVal === '是') {
+                    isCompVal = '是';
+                } else {
+                    isCompVal = '/';
+                }
+
                 const itemNo = cols[2] ? cols[2].trim() : '';
                 const crmNo = cols[3] ? cols[3].trim() : '';
                 const location = cols[4] ? cols[4].trim() : '';
@@ -707,18 +881,21 @@
                 const price = cols[9] ? cols[9].trim().replace(/[^0-9.]/g, '') : '0';
                 
                 // A05C additional cells mapping with fallback default names
-                const applicant = cols[10] ? cols[10].trim() : document.getElementById('input-staffName').value.trim();
+                const staffNameEl = document.getElementById('input-staffName');
+                const defaultStaff = staffNameEl ? staffNameEl.value.trim() : "";
+                const applicant = cols[10] ? cols[10].trim() : defaultStaff;
                 const cancelReason = cols[11] ? cols[11].trim() : '';
                 
                 const today = new Date();
                 const formattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-                const cancelDate = cols[12] ? cols[12].trim() : formattedDate;
+                const rawCancelDate = cols[12] ? cols[12].trim() : formattedDate;
+                const cancelDate = normalizeDateToYYYYMMDD(rawCancelDate);
                 const remark = cols[13] ? cols[13].trim() : '';
 
                 if (name && itemNo) {
                     if (!itemRecords.some(item => item.itemNo === itemNo)) {
                         itemRecords.push({
-                            name, isComp, itemNo, crmNo, location, user, brand, sn, fund, price,
+                            name, isComp: isCompVal, itemNo, crmNo, location, user, brand, sn, fund, price,
                             applicant, cancelReason, cancelDate, remark
                         });
                         importedCount++;
@@ -729,7 +906,7 @@
             });
 
             renderTable();
-            document.getElementById('pasteArea').value = ''; // Clean box
+            if (pasteArea) pasteArea.value = ''; // Clean box
 
             if (importedCount > 0) {
                 let msg = `🎉 成功解析並匯入 ${importedCount} 項資料！`;
